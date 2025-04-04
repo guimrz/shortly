@@ -11,16 +11,17 @@ namespace Shortly.Core.Mediator
 
         public Mediator(ILogger<Mediator> logger, IServiceProvider serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(serviceProvider);
-            ArgumentNullException.ThrowIfNull(logger);
+            Guard.NotNull(serviceProvider);
+            Guard.NotNull(logger);
 
             this.logger = logger;
             this.serviceProvider = serviceProvider;
         }
 
-        public async Task HandleAsync(IRequest request, CancellationToken cancellationToken = default)
+        public async Task HandleAsync<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest
         {
-            ArgumentNullException.ThrowIfNull(request);
+            Guard.NotNull(request);
 
             IRequestHandler<IRequest>? handler = serviceProvider.GetService<IRequestHandler<IRequest>>();
 
@@ -32,11 +33,13 @@ namespace Shortly.Core.Mediator
             await handler.HandleAsync(request, cancellationToken);
         }
 
-        public async Task<TResponse> HandleAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+        public async Task<TResponse> HandleAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest<TResponse>
         {
-            ArgumentNullException.ThrowIfNull(request);
+            Guard.NotNull(request);
 
-            IRequestHandler<IRequest<TResponse>, TResponse>? handler = serviceProvider.GetService<IRequestHandler<IRequest<TResponse>, TResponse>>();
+
+            IRequestHandler<TRequest, TResponse>? handler = serviceProvider.GetService<IRequestHandler<TRequest, TResponse>>();
 
             if (handler is null)
             {
@@ -46,9 +49,10 @@ namespace Shortly.Core.Mediator
             return await handler.HandleAsync(request, cancellationToken);
         }
 
-        public Task PublishAsync(INotification notification, CancellationToken cancellationToken = default)
+        public Task PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
+            where TNotification : INotification
         {
-            ArgumentNullException.ThrowIfNull(notification);
+            Guard.NotNull(notification);
 
             IEnumerable<INotificationHandler<INotification>> handlers = serviceProvider.GetServices<INotificationHandler<INotification>>();
 

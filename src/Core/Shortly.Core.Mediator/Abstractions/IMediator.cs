@@ -2,10 +2,13 @@
 {
     public interface IMediator
     {
-        Task HandleAsync(IRequest request, CancellationToken cancellationToken = default);
+        Task HandleAsync<TRequest>(TRequest request, CancellationToken cancellationToken = default) 
+            where TRequest : IRequest;
 
-        Task<TResponse> HandleAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default);
+        Task<TResponse> HandleAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest<TResponse>;
 
-        Task PublishAsync(INotification notification, CancellationToken cancellationToken = default);
+        Task PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken = default) 
+            where TNotification : INotification;
     }
 }

@@ -8,7 +8,7 @@ namespace Shortly.Core.Mediator.Extensions
     {
         public static IServiceCollection AddMediator(this IServiceCollection services)
         {
-            ArgumentNullException.ThrowIfNull(services);
+            Guard.NotNull(services);
 
             services.TryAddScoped<IMediator, Mediator>();
 
@@ -17,9 +17,9 @@ namespace Shortly.Core.Mediator.Extensions
 
         public static IServiceCollection AddRequestHandler<THandler, TRequest, TResponse>(this IServiceCollection services)
             where THandler : class, IRequestHandler<TRequest, TResponse>
-            where TRequest : IRequest<TResponse>
+            where TRequest : class, IRequest<TResponse>
         {
-            ArgumentNullException.ThrowIfNull(services);
+            Guard.NotNull(services);
 
             services.AddScoped<IRequestHandler<TRequest, TResponse>, THandler>();
 
@@ -30,7 +30,7 @@ namespace Shortly.Core.Mediator.Extensions
             where THandler : class, IRequestHandler<TRequest>
             where TRequest : IRequest
         {
-            ArgumentNullException.ThrowIfNull(services);
+            Guard.NotNull(services);
 
             services.AddScoped<IRequestHandler<TRequest>, THandler>();
 
@@ -41,7 +41,7 @@ namespace Shortly.Core.Mediator.Extensions
             where THandler : class, INotificationHandler<TNotification>
             where TNotification : INotification
         {
-            ArgumentNullException.ThrowIfNull(services);
+            Guard.NotNull(services);
 
             services.AddScoped<INotificationHandler<TNotification>, THandler>();
 

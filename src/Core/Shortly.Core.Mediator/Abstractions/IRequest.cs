@@ -5,7 +5,7 @@
         //
     }
 
-    public interface IRequest<out TResponse>
+    public interface IRequest<in TResponse>
     {
         //
     }
