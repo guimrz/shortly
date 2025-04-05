@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Queries\GetShortlinkByCode\GetShortlinkByCodeQuery.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Shortly.Core.Mediator\Shortly.Core.Mediator.csproj" />
+    <ProjectReference Include="..\Shortly.Services.Shortlinks.Api.Contracts\Shortly.Services.Shortlinks.Api.Contracts.csproj" />
+    <ProjectReference Include="..\Shortly.Services.Shortlinks.Domain\Shortly.Services.Shortlinks.Domain.csproj" />
+    <ProjectReference Include="..\Shortly.Services.Shortlinks.Repository\Shortly.Services.Shortlinks.Repository.csproj" />
+  </ItemGroup>
+
+</Project>
