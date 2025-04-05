@@ -25,7 +25,7 @@ namespace Shortly.Services.Shortlinks.Api.Controllers
         [ProducesResponseType<ShortlinkResponse>(201)]
         public async Task<IActionResult> Create([FromBody] CreateShortlinkRequest request, CancellationToken cancellationToken = default)
         {
-            ShortlinkResponse response = await mediator.HandleAsync<CreateShortLinkCommand, ShortlinkResponse>(new CreateShortLinkCommand(request), cancellationToken);
+            ShortlinkResponse response = await mediator.HandleAsync(new CreateShortLinkCommand(request), cancellationToken);
 
             return CreatedAtAction(nameof(Get), new { shortlinkId = response.Id },  response);
         }
@@ -33,7 +33,7 @@ namespace Shortly.Services.Shortlinks.Api.Controllers
         [HttpGet("{shortlinkId:guid}")]
         public async Task<IActionResult> Get(Guid shortlinkId, CancellationToken cancellationToken = default)
         {
-            ShortlinkResponse? response = await mediator.HandleAsync<GetShortlinkQuery, ShortlinkResponse?>(new GetShortlinkQuery(shortlinkId), cancellationToken);
+            ShortlinkResponse? response = await mediator.HandleAsync(new GetShortlinkQuery(shortlinkId), cancellationToken);
 
             return response is null ? NotFound() : Ok(response);
         }
@@ -41,7 +41,7 @@ namespace Shortly.Services.Shortlinks.Api.Controllers
         [HttpGet("{shortCode}/redirect")]
         public async Task<IActionResult> LinkRedirect(string shortCode, CancellationToken cancellationToken = default)
         {
-            ShortlinkResponse? response = await mediator.HandleAsync<GetShortlinkByCodeQuery, ShortlinkResponse>(new GetShortlinkByCodeQuery(shortCode), cancellationToken);
+            ShortlinkResponse? response = await mediator.HandleAsync(new GetShortlinkByCodeQuery(shortCode), cancellationToken);
 
             return response is null ? NotFound() : Redirect(response.OriginalUrl);
         }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Shortly.Core.Mediator.Abstractions;
+using System.Reflection;
 
 namespace Shortly.Core.Mediator
 {
@@ -23,30 +24,36 @@ namespace Shortly.Core.Mediator
         {
             Guard.NotNull(request);
 
-            IRequestHandler<IRequest>? handler = serviceProvider.GetService<IRequestHandler<IRequest>>();
+            var handlerType = typeof(IRequestHandler<>).MakeGenericType(request.GetType());
+
+            var handler = serviceProvider.GetService(handlerType);
 
             if (handler is null)
             {
                 throw new InvalidOperationException($"Could not retrieve the handler for the request of type '{request.GetType().FullName}'.");
             }
 
-            await handler.HandleAsync(request, cancellationToken);
+            var method = handlerType.GetMethod(nameof(IRequestHandler<IRequest>.HandleAsync))!;
+
+            await (Task)method.Invoke(handler, [request, cancellationToken])!;
         }
 
-        public async Task<TResponse> HandleAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
-            where TRequest : IRequest<TResponse>
+        public async Task<TResponse> HandleAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
             Guard.NotNull(request);
 
+            var handlerType = typeof(IRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
 
-            IRequestHandler<TRequest, TResponse>? handler = serviceProvider.GetService<IRequestHandler<TRequest, TResponse>>();
+            var handler = serviceProvider.GetService(handlerType);
 
             if (handler is null)
             {
                 throw new InvalidOperationException($"Could not retrieve the handler for the request of type '{request.GetType().FullName}'.");
             }
 
-            return await handler.HandleAsync(request, cancellationToken);
+            var method = handlerType.GetMethod(nameof(IRequestHandler<IRequest<TResponse>, TResponse>.HandleAsync))!;
+
+            return await (Task<TResponse>)method.Invoke(handler, [request, cancellationToken])!;
         }
 
         public Task PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
