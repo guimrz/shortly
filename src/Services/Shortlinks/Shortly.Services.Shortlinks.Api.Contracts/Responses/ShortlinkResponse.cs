@@ -6,8 +6,6 @@
 
         public string OriginalUrl { get; set; } = default!;
 
-        public string? Alias { get; set; }
-
         public string ShortUrl { get; set; } = default!;
 
         public string ShortCode { get; set; } = default!;

@@ -3,7 +3,5 @@
     public class CreateShortlinkRequest
     {
         public string Url { get; set; } = default!;
-
-        public string? Alias { get; set; }
     }
 }

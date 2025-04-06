@@ -27,7 +27,7 @@ namespace Shortly.Services.Shortlinks.Application.Commands.CreateShortLink
             }
             while (await repository.ShortLinks.AnyAsync(shortlink => shortlink.ShortCode == shortCode, cancellationToken));
 
-            Shortlink shortLink = new Shortlink(command.Request.Url, shortCode, command.Request.Alias, TimeSpan.FromDays(30));
+            Shortlink shortLink = new Shortlink(command.Request.Url, shortCode, TimeSpan.FromDays(30));
 
             shortLink = await repository.InsertAsync(shortLink, cancellationToken);
             await repository.SaveChangesAsync(cancellationToken);

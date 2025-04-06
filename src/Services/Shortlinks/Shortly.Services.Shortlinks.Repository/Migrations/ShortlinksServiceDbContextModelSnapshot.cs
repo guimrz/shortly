@@ -28,9 +28,6 @@ namespace Shortly.Services.Shortlinks.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Alias")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset");

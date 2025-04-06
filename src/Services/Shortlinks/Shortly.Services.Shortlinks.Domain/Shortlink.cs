@@ -8,8 +8,6 @@
 
         public string ShortCode { get; protected set; }
 
-        public string? Alias { get; protected set; }
-
         public DateTimeOffset CreationDate { get; protected set; }
 
         public DateTimeOffset? ExpirationDate { get; protected set; }
@@ -21,14 +19,13 @@
             //
         }
 
-        public Shortlink(string originalUrl, string shortCode, string? alias, TimeSpan timeToLive)
+        public Shortlink(string originalUrl, string shortCode, TimeSpan timeToLive)
         {
-            ArgumentException.ThrowIfNullOrEmpty(originalUrl);
-            ArgumentException.ThrowIfNullOrEmpty(shortCode);
+            ArgumentException.ThrowIfNullOrWhiteSpace(originalUrl);
+            ArgumentException.ThrowIfNullOrWhiteSpace(shortCode);
 
             OriginalUrl = originalUrl;
             ShortCode = shortCode;
-            Alias = alias;
             CreationDate = DateTime.UtcNow;
             ExpirationDate = CreationDate.Add(timeToLive);
         }

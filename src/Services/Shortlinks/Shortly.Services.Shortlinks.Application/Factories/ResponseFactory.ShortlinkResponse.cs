@@ -17,7 +17,6 @@ namespace Shortly.Services.Shortlinks.Application.Factories
             {
                 return new ShortlinkResponse
                 {
-                    Alias = shortlink.Alias,
                     CreationDate = shortlink.CreationDate,
                     ExpirationDate = shortlink.ExpirationDate,
                     Id = shortlink.Id,

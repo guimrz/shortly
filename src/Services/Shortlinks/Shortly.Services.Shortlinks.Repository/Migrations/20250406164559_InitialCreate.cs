@@ -18,7 +18,6 @@ namespace Shortly.Services.Shortlinks.Repository.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OriginalUrl = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
                     ShortCode = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    Alias = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     ExpirationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },

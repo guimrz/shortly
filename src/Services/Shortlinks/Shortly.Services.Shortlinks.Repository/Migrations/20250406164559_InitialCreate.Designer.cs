@@ -12,7 +12,7 @@ using Shortly.Services.Shortlinks.Repository;
 namespace Shortly.Services.Shortlinks.Repository.Migrations
 {
     [DbContext(typeof(ShortlinksServiceDbContext))]
-    [Migration("20250405113357_InitialCreate")]
+    [Migration("20250406164559_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -30,9 +30,6 @@ namespace Shortly.Services.Shortlinks.Repository.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Alias")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
