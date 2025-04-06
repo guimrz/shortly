@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shortly.Core.Mediator.Abstractions;
+using System.Reflection;
 
 namespace Shortly.Core.Mediator.Extensions
 {
@@ -15,35 +16,48 @@ namespace Shortly.Core.Mediator.Extensions
             return services;
         }
 
-        public static IServiceCollection AddRequestHandler<THandler, TRequest, TResponse>(this IServiceCollection services)
-            where THandler : class, IRequestHandler<TRequest, TResponse>
-            where TRequest : class, IRequest<TResponse>
+        public static IServiceCollection RegisterHandlersFromCurrentAssembly(this IServiceCollection services)
+        {
+            return services.RegisterHandlersFromAssembly(Assembly.GetCallingAssembly());
+        }
+
+        public static IServiceCollection RegisterHandlersFromAssembly(this IServiceCollection services, Assembly assembly)
         {
             Guard.NotNull(services);
+            Guard.NotNull(assembly);
 
-            services.AddScoped<IRequestHandler<TRequest, TResponse>, THandler>();
+            services.RegisterAssemblyTypesImplementing(assembly, typeof(IRequestHandler<,>));
+            services.RegisterAssemblyTypesImplementing(assembly, typeof(IRequestHandler<>));
+            services.RegisterAssemblyTypesImplementing(assembly, typeof(INotificationHandler<>));
 
             return services;
         }
 
-        public static IServiceCollection AddRequestHandler<THandler, TRequest>(this IServiceCollection services)
-            where THandler : class, IRequestHandler<TRequest>
-            where TRequest : IRequest
+        private static IServiceCollection RegisterAssemblyTypesImplementing(this IServiceCollection services, Assembly assembly, Type type)
         {
-            Guard.NotNull(services);
+            Guard.NotNull(type);
+            Guard.NotNull(assembly);
 
-            services.AddScoped<IRequestHandler<TRequest>, THandler>();
+            if (!type.IsInterface || !type.IsGenericTypeDefinition)
+            {
+                throw new ArgumentException("The specified type must be a generic interface", nameof(type));
+            }
 
-            return services;
-        }
+            var implementationTypes = assembly.GetTypes()
+                .Where(t => t.IsClass && !t.IsAbstract && !t.IsGenericTypeDefinition)
+                .Where(t => t.GetInterfaces()
+                             .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == type));
 
-        public static IServiceCollection AddNotificationHandler<THandler, TNotification>(this IServiceCollection services)
-            where THandler : class, INotificationHandler<TNotification>
-            where TNotification : INotification
-        {
-            Guard.NotNull(services);
+            foreach (var implType in implementationTypes)
+            {
+                var interfaces = implType.GetInterfaces()
+                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == type);
 
-            services.AddScoped<INotificationHandler<TNotification>, THandler>();
+                foreach (var interfaceType in interfaces)
+                {
+                    services.Add(new ServiceDescriptor(interfaceType, implType, ServiceLifetime.Scoped));
+                }
+            }
 
             return services;
         }

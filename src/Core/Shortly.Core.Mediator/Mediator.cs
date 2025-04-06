@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Shortly.Core.Mediator.Abstractions;
-using System.Reflection;
 
 namespace Shortly.Core.Mediator
 {

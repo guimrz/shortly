@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Shortly.Core;
 using Shortly.Core.Mediator.Extensions;
-using Shortly.Services.Shortlinks.Api.Contracts.Responses;
-using Shortly.Services.Shortlinks.Application.Commands.CreateShortLink;
-using Shortly.Services.Shortlinks.Application.Queries.GetShortlink;
-using Shortly.Services.Shortlinks.Application.Queries.GetShortLinkByShortCode;
+using System.Reflection;
 
 namespace Shortly.Services.Shortlinks.Application.Extensions
 {
@@ -18,9 +15,7 @@ namespace Shortly.Services.Shortlinks.Application.Extensions
             Guard.NotNull(services);
 
             services.AddMediator();
-            services.AddRequestHandler<CreateShortLinkCommandHandler, CreateShortLinkCommand, ShortlinkResponse>();
-            services.AddRequestHandler<GetShortlinkByCodeQueryHandler, GetShortlinkByCodeQuery, ShortlinkResponse?>();
-            services.AddRequestHandler<GetShortlinkQueryHandler, GetShortlinkQuery, ShortlinkResponse?>();
+            services.RegisterHandlersFromAssembly(Assembly.GetExecutingAssembly());
 
             return services;
         }
