@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Shortly.Core.Mapper\Shortly.Core.Mapper.csproj" />
     <ProjectReference Include="..\..\..\Core\Shortly.Core.Mediator\Shortly.Core.Mediator.csproj" />
     <ProjectReference Include="..\Shortly.Services.Shortlinks.Api.Contracts\Shortly.Services.Shortlinks.Api.Contracts.csproj" />
     <ProjectReference Include="..\Shortly.Services.Shortlinks.Domain\Shortly.Services.Shortlinks.Domain.csproj" />

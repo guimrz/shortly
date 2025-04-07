@@ -28,6 +28,8 @@ namespace Shortly.Services.Shortlinks.Api
                     config.Title = "Products API";
                     config.Theme = ScalarTheme.Default;
                     config.HiddenClients = true;
+                    config.HideModels = true;
+                    config.DotNetFlag = true;
                 });
             }
 
